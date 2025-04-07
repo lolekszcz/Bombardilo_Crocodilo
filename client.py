@@ -8,10 +8,11 @@ class Client():
         self.clientsocket.send(bytes('hello', 'utf-8'))
         self.host=host
         self.port=port
+        self.ready=False
     def run(self):
-        while True:
-            self.receive()
-            self.send('aaa')
+        print('bbb')
+        self.receive()
+        self.send('aaa')
     def receive(self):
         buf = self.clientsocket.recv(1024).decode()
         time.sleep(0.01)
@@ -19,5 +20,5 @@ class Client():
 
     def send(self,message):
         self.clientsocket.send(bytes(f'{message}', 'utf-8'))
-client1=Client('127.0.0.1', 12345)
-client1.run()
+# client1=Client('127.0.0.1', 12345)
+# client1.run()
