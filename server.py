@@ -35,7 +35,8 @@ class Server:
         self.players = []
         self.walls = []
 
-
+        #getting ready:
+        self.ready_players=0
         print("socket is listening")
         return
 
@@ -51,12 +52,8 @@ class Server:
 
                 data_temp = data_raw.decode()
                 print(data_temp)
-
-
-                            # print(f"Player num: {len(self.players)}")
-                            # print(f"Client position: {posX},{posY}
-
-                # Process the data and send a response back to the client
+                data=data_temp.split(":")
+                self.handle_message(data,client_socket)
 
 
                 client_socket.send('xxx'.encode())
@@ -68,6 +65,14 @@ class Server:
         print("Closing connection...")
         self.players.pop(client_id)
         client_socket.close()
+    def handle_message(self,data,client_socket):
+        if data[0]=="s":
+            if data[1]=="player_ready":
+                self.ready_players+=1
+        if self.ready_players>=len(self.clients) and self.ready_players>=1:
+                client_socket.send("s:game_started".encode())
+
+
     def update_server(self):
         # Establish connection with client.
         c, addr = self.s.accept()
@@ -104,34 +109,6 @@ while True:
 
 
 
-# import socket
-# # become a server socket, maximum 5 connections
-# class Server():
-#     def __init__(self,HOST):
-#         self.clients = set()
-#         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#         self.serversocket.bind(('localhost', HOST))
-#         self.serversocket.listen(5)
-#     def new_connection(self):
-#         connection, address = self.serversocket.accept()
-#         self.clients.add(connection)
-#     def run(self):
-#         while True:
-#             connection, address = self.serversocket.accept()
-#             # self.clients.add(connection)
-#             # print(self.clients)
-#             data = connection.recv(1024).decode()
-#             print(data)
-#             # if connection in self.clients:
-#             #     pass
-#             # else:
-#             #
-#             #     connection.sendall(bytes(f"player_id {len(self.clients)}", 'utf-8'))
-#
-#             # for client in self.clients:
-#             #     client.sendall(bytes(f"{data} from host", 'utf-8'))
-# server1=Server(8089)
-# server1.run()
 
 
 
