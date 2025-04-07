@@ -8,6 +8,8 @@ class Game():
         self.height=heigth
         self.screen=pygame.display.set_mode((self.width,self.height))
         self.running=True
+        self.game_start=False
+        self.ready=False
         self.join()
     def run(self):
         while self.running:
@@ -15,6 +17,7 @@ class Game():
             self.controls()
             if self.client!=None:
                 self.client.run()
+
             pygame.display.update()
             time.sleep(0.01)
         pygame.quit()
@@ -22,5 +25,8 @@ class Game():
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 self.running=False
+    def ready_up(self):
+        self.ready=True
+        self.client.send('s:player_ready')
     def join(self):
         self.client=client.Client("127.0.0.1", 12345)

@@ -35,7 +35,8 @@ class Server:
         self.players = []
         self.walls = []
 
-
+        #getting ready:
+        self.ready_players=0
         print("socket is listening")
         return
 
@@ -51,12 +52,8 @@ class Server:
 
                 data_temp = data_raw.decode()
                 print(data_temp)
-
-
-                            # print(f"Player num: {len(self.players)}")
-                            # print(f"Client position: {posX},{posY}
-
-                # Process the data and send a response back to the client
+                data=data_temp.split(":")
+                self.handle_message(data,client_socket)
 
 
                 client_socket.send('xxx'.encode())
@@ -68,6 +65,14 @@ class Server:
         print("Closing connection...")
         self.players.pop(client_id)
         client_socket.close()
+    def handle_message(self,data,client_socket):
+        if data[0]=="s":
+            if data[1]=="player_ready":
+                self.ready_players+=1
+        if self.ready_players>=len(self.clients) and self.ready_players>=1:
+                client_socket.send("s:game_started".encode())
+
+
     def update_server(self):
         # Establish connection with client.
         c, addr = self.s.accept()
