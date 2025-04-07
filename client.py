@@ -1,7 +1,7 @@
 import socket
 import time
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientsocket.connect(('localhost', 8089))
+clientsocket.connect(('127.0.0.1', 12345))
 clientsocket.send(bytes('hello','utf-8'))
 clientsocket.send(bytes('hello2','utf-8'))
 clientsocket.send(bytes('hello3','utf-8'))
