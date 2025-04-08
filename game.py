@@ -18,9 +18,9 @@ class Game():
             self.screen.fill((255,255,255))
             self.controls()
             if self.client!=None:
-                self.client.run()
+                self.handle_server()
 
-            self.button.draw(self.screen)
+            # self.button.draw(self.screen)
             pygame.display.update()
             time.sleep(0.01)
         pygame.quit()
@@ -28,11 +28,26 @@ class Game():
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 self.running=False
+            if event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_r:
+                    self.ready_up()
             # elif event.type == pygame.MOUSEBUTTONDOWN:
             #     mouse_pos = pygame.mouse.get_pos()
             #     if self.button.is_clicked(mouse_pos):
             #         print("Button clicked!")
+    def ready_up(self):
+        if self.ready==False:
+            self.ready=True
+            self.client.send('s:player_ready')
 
+        else:
+            self.ready=False
+            self.client.send('s:player_not_ready')
+    def join(self):
+        self.client=client.Client("127.0.0.1", 12345)
+    def handle_server(self):
+        self.client.run()
+        print(self.client.buf)
 class Button:
     def __init__(self, image, x, y, width, height, text=None, font=None, text_color=(0, 0, 0)):
         self.image = pygame.image.load('Start_button.png')
@@ -49,8 +64,3 @@ class Button:
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-    def ready_up(self):
-        self.ready=True
-        self.client.send('s:player_ready')
-    def join(self):
-        self.client=client.Client("127.0.0.1", 12345)

@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 def get_local_ip():
     # Connect to an external server to find the local IP
@@ -54,9 +55,7 @@ class Server:
                 print(data_temp)
                 data=data_temp.split(":")
                 self.handle_message(data,client_socket)
-
-
-                client_socket.send('xxx'.encode())
+                print('sent')
             except Exception as e:
                 print(f"Error: {e}")
                 break
@@ -69,8 +68,17 @@ class Server:
         if data[0]=="s":
             if data[1]=="player_ready":
                 self.ready_players+=1
+            if data[1]=="player_not_ready":
+                self.ready_players-=1
+            if data[1]=="hello":
+                client_socket.send("s:hello_back".encode())
         if self.ready_players>=len(self.clients) and self.ready_players>=1:
                 client_socket.send("s:game_started".encode())
+                time.sleep(0.001)
+        client_socket.send(f"s:number_of_ready_players:{self.ready_players}".encode())
+        time.sleep(0.001)
+        client_socket.send(f"number_of_players:{len(self.clients)}".encode())
+        time.sleep(0.001)
 
 
     def update_server(self):
