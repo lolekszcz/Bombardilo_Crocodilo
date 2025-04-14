@@ -23,6 +23,10 @@ class Game():
             # self.button.draw(self.screen)
             pygame.display.update()
             time.sleep(0.01)
+        if self.ready:
+            self.ready_up()
+        self.client.send('s:player_disconnected')
+
         pygame.quit()
     def controls(self):
         for event in pygame.event.get():
@@ -40,9 +44,11 @@ class Game():
             self.ready=True
             self.client.send('s:player_ready')
 
+
         else:
             self.ready=False
             self.client.send('s:player_not_ready')
+
     def join(self):
         self.client=client.Client("127.0.0.1", 12345)
     def handle_server(self):

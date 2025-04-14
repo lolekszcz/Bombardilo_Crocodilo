@@ -5,7 +5,7 @@ class Client():
     def __init__(self,host,port):
         self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.clientsocket.connect((host,port))
-        self.clientsocket.send(bytes('s:hello', 'utf-8'))
+        self.send("s:hello")
         self.host=host
         self.port=port
         self.ready=False
@@ -14,11 +14,12 @@ class Client():
         self.send('s:alive')
     def receive(self):
         self.buf = self.clientsocket.recv(1024).decode()
+        self.buf=self.buf.split(",")
         print(self.buf)
         return self.buf
 
     def send(self,message):
-        self.clientsocket.send(bytes(f'{message}', 'utf-8'))
+        self.clientsocket.send(bytes(f'{message},', 'utf-8'))
         time.sleep(0.001)
 # client1=Client('127.0.0.1', 12345)
 # client1.run()

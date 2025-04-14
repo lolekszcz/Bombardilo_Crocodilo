@@ -21,6 +21,7 @@ class Server:
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.number_of_players=0
 
         self.s = socket.socket()
 
@@ -52,8 +53,9 @@ class Server:
                     break
 
                 data_temp = data_raw.decode()
-                print(data_temp)
-                data=data_temp.split(":")
+
+                data=data_temp.split(",")
+                print(data)
                 self.handle_message(data,client_socket)
                 print('sent')
             except Exception as e:
@@ -65,20 +67,30 @@ class Server:
         self.players.pop(client_id)
         client_socket.close()
     def handle_message(self,data,client_socket):
-        if data[0]=="s":
-            if data[1]=="player_ready":
-                self.ready_players+=1
-            if data[1]=="player_not_ready":
-                self.ready_players-=1
-            if data[1]=="hello":
-                client_socket.send("s:hello_back".encode())
-        if self.ready_players>=len(self.clients) and self.ready_players>=1:
-                client_socket.send("s:game_started".encode())
-                time.sleep(0.001)
-        client_socket.send(f"s:number_of_ready_players:{self.ready_players}".encode())
-        time.sleep(0.001)
-        client_socket.send(f"number_of_players:{len(self.clients)}".encode())
-        time.sleep(0.001)
+        for d in data:
+            d=d.split(":")
+            print(d)
+            if d[0] == "s":
+                print(d[1])
+                if d[1] == "player_ready":
+                    self.ready_players += 1
+                    print('reeady')
+                if d[1] == "player_not_ready":
+                    self.ready_players -= 1
+                if d[1] == "hello":
+                    self.number_of_players += 1
+                    print(self.number_of_players)
+                    client_socket.send("s:hello_back,".encode())
+
+                if d[1] == 'player_disconnected':
+                    self.number_of_players -= 1
+
+        if self.ready_players>=self.number_of_players and self.ready_players>=1:
+                client_socket.send("s:game_started,".encode())
+
+        client_socket.send(f"s:number_of_ready_players:{self.ready_players},".encode())
+        client_socket.send(f"s:number_of_players:{self.number_of_players},".encode())
+
 
 
     def update_server(self):
