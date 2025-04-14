@@ -2,7 +2,6 @@ import pygame
 import time
 
 from pygame import MOUSEBUTTONDOWN
-from pygame.examples.sprite_texture import event
 from gui import *
 
 import client
@@ -10,15 +9,16 @@ import client
 class Game():
     def __init__(self,width,heigth):
         pygame.init()
+        self.join()
         self.state = 'start'
-        self.gui = GUI()
+        # self.gui = GUI()
         self.width=width
         self.height=heigth
         self.screen=pygame.display.set_mode((self.width,self.height))
         self.running=True
         self.game_start=False
         self.ready=False
-        self.join()
+
         self.button = Button('Start_button.png',400,800,100,100)
         clicked = False
         counter = 0
@@ -33,8 +33,13 @@ class Game():
 
             pos = pygame.mouse.get_pos()
             for event in pygame.event.get():
+                if event.type==pygame.KEYDOWN:
+                    if event.key==pygame.K_r:
+                        self.ready_up()
+                        print('rr')
                 if self.button.collide(pos) and event.type == MOUSEBUTTONDOWN and event.button == 1:
                     self.state = 'game'
+
 
             if self.state == 'start':
                 self.button.draw(self.screen)
@@ -56,8 +61,6 @@ class Game():
                 self.running=False
 
     def ready_up(self):
-        self.ready=True
-        self.client.send('s:player_ready')
         if self.ready==False:
             self.ready=True
             self.client.send('s:player_ready')
@@ -69,6 +72,7 @@ class Game():
 
     def join(self):
         self.client = client.Client("127.0.0.1", 12345)
+        print('aaa')
 
 class Button:
     def __init__(self, image, x, y, width, height, text=None, font=None, text_color=(0, 0, 0)):
