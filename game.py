@@ -2,7 +2,6 @@ import pygame
 import time
 
 from pygame import MOUSEBUTTONDOWN
-from pygame.examples.sprite_texture import event
 from gui import *
 
 import client
@@ -40,7 +39,7 @@ class Game():
                 self.button.draw(self.screen)
 
             if self.state == 'game':
-                self.gui.draw()
+                self.gui.draw(self.screen)
 
             pygame.display.update()
             time.sleep(0.01)
