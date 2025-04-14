@@ -63,8 +63,25 @@ class MapGenerator:
                     if water_nearby and grass_nearby:
                         break
 
+
+                # insert appropriate sand tile texture depending on neighbouring water
                 if water_nearby and grass_nearby:
-                    new_map[y][x] = 204
+                    # Determine direction of surrounding tiles for edge placement
+                    up = self.map[y - 1][x]
+                    down = self.map[y + 1][x]
+                    left = self.map[y][x - 1]
+                    right = self.map[y][x + 1]
+
+                    if up == 0:
+                        new_map[y][x] = 201  # grass above, water below
+                    elif down == 104 and up == 0:
+                        new_map[y][x] = 205  # grass below, water above
+                    elif left == 104 and right == 0:
+                        new_map[y][x] = 201  # grass left, water right
+                    elif right == 104 and left == 0:
+                        new_map[y][x] = 207  # grass right, water left
+                    else:
+                        new_map[y][x] = 204  # default sand
 
         self.map = new_map
 
