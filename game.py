@@ -1,11 +1,17 @@
 import pygame
 import time
+
+from pygame import MOUSEBUTTONDOWN
+from pygame.examples.sprite_texture import event
+from gui import *
+
 import client
-import tkinter as tk
 
 class Game():
     def __init__(self,width,heigth):
         pygame.init()
+        self.state = 'start'
+        self.gui = GUI()
         self.width=width
         self.height=heigth
         self.screen=pygame.display.set_mode((self.width,self.height))
@@ -13,14 +19,29 @@ class Game():
         self.game_start=False
         self.ready=False
         self.join()
+        self.button = Button('Start_button.png',400,800,100,100)
+        clicked = False
+        counter = 0
     def run(self):
         while self.running:
             self.screen.fill((255,255,255))
             self.controls()
-            if self.client!=None:
-                self.handle_server()
 
-            # self.button.draw(self.screen)
+
+            if self.client!=None:
+                self.client.run()
+
+            pos = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if self.button.collide(pos) and event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    self.state = 'game'
+
+            if self.state == 'start':
+                self.button.draw(self.screen)
+
+            if self.state == 'game':
+                self.gui.draw()
+
             pygame.display.update()
             time.sleep(0.01)
         if self.ready:
@@ -28,18 +49,15 @@ class Game():
         self.client.send('s:player_disconnected')
 
         pygame.quit()
+
     def controls(self):
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 self.running=False
-            if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_r:
-                    self.ready_up()
-            # elif event.type == pygame.MOUSEBUTTONDOWN:
-            #     mouse_pos = pygame.mouse.get_pos()
-            #     if self.button.is_clicked(mouse_pos):
-            #         print("Button clicked!")
+
     def ready_up(self):
+        self.ready=True
+        self.client.send('s:player_ready')
         if self.ready==False:
             self.ready=True
             self.client.send('s:player_ready')
@@ -50,13 +68,11 @@ class Game():
             self.client.send('s:player_not_ready')
 
     def join(self):
-        self.client=client.Client("127.0.0.1", 12345)
-    def handle_server(self):
-        self.client.run()
-        print(self.client.buf)
+        self.client = client.Client("127.0.0.1", 12345)
+
 class Button:
     def __init__(self, image, x, y, width, height, text=None, font=None, text_color=(0, 0, 0)):
-        self.image = pygame.image.load('Start_button.png')
+        self.image = pygame.image.load(image)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.text = text
@@ -68,5 +84,12 @@ class Button:
             text_rect = self.text_surface.get_rect(center=self.rect.center)
             self.image.blit(self.text_surface, (100, 100))
 
+    def collide(self, pos):
+        if self.rect.collidepoint(pos):
+            return True
+        return False
+
+
     def draw(self, screen):
+        pos = pygame.mouse.get_pos()
         screen.blit(self.image, self.rect)
