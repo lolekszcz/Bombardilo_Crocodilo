@@ -3,7 +3,6 @@ import random
 import math
 
 
-
 class MapGenerator:
     def __init__(self, rows, cols, tile_size=10):
         self.rows = rows
