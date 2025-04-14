@@ -37,7 +37,7 @@ class MapGenerator:
                 for x in range(cols):
                     dist = math.sqrt((point[0] - x)**2 + (point[1] - y)**2)
                     if dist < 80:
-                        self.map[y][x] = 1
+                        self.map[y][x] = 104
                     pass
 
         # Second pass: create thicker sand borders (10 tiles wide)
@@ -57,7 +57,7 @@ class MapGenerator:
                             tile = self.map[ny][nx]
                             if tile == 0:
                                 water_nearby = True
-                            elif tile == 1:
+                            elif tile == 104:
                                 grass_nearby = True
                         if water_nearby and grass_nearby:
                             break
@@ -65,15 +65,45 @@ class MapGenerator:
                         break
 
                 if water_nearby and grass_nearby:
-                    new_map[y][x] = 2
+                    new_map[y][x] = 204
 
         self.map = new_map
 
 
         self.tiles = {
             0: pygame.image.load('Tiny Swords/Ground/000.png'),
-            1: pygame.image.load('Tiny Swords/Ground/104.png'),
-            2: pygame.image.load('Tiny Swords/Ground/204.png')
+            100: pygame.image.load('Tiny Swords/Ground/100.png'),
+            101: pygame.image.load('Tiny Swords/Ground/101.png'),
+            102: pygame.image.load('Tiny Swords/Ground/102.png'),
+            103: pygame.image.load('Tiny Swords/Ground/103.png'),
+            104: pygame.image.load('Tiny Swords/Ground/104.png'),
+            105: pygame.image.load('Tiny Swords/Ground/105.png'),
+            106: pygame.image.load('Tiny Swords/Ground/106.png'),
+            107: pygame.image.load('Tiny Swords/Ground/107.png'),
+            108: pygame.image.load('Tiny Swords/Ground/108.png'),
+            110: pygame.image.load('Tiny Swords/Ground/110.png'),
+            111: pygame.image.load('Tiny Swords/Ground/111.png'),
+            112: pygame.image.load('Tiny Swords/Ground/112.png'),
+            120: pygame.image.load('Tiny Swords/Ground/120.png'),
+            121: pygame.image.load('Tiny Swords/Ground/121.png'),
+            122: pygame.image.load('Tiny Swords/Ground/122.png'),
+            130: pygame.image.load('Tiny Swords/Ground/130.png'),
+            200: pygame.image.load('Tiny Swords/Ground/200.png'),
+            201: pygame.image.load('Tiny Swords/Ground/201.png'),
+            202: pygame.image.load('Tiny Swords/Ground/202.png'),
+            203: pygame.image.load('Tiny Swords/Ground/203.png'),
+            204: pygame.image.load('Tiny Swords/Ground/204.png'),
+            205: pygame.image.load('Tiny Swords/Ground/205.png'),
+            206: pygame.image.load('Tiny Swords/Ground/206.png'),
+            207: pygame.image.load('Tiny Swords/Ground/207.png'),
+            208: pygame.image.load('Tiny Swords/Ground/208.png'),
+            210: pygame.image.load('Tiny Swords/Ground/210.png'),
+            211: pygame.image.load('Tiny Swords/Ground/211.png'),
+            212: pygame.image.load('Tiny Swords/Ground/212.png'),
+            220: pygame.image.load('Tiny Swords/Ground/220.png'),
+            221: pygame.image.load('Tiny Swords/Ground/221.png'),
+            222: pygame.image.load('Tiny Swords/Ground/222.png'),
+            230: pygame.image.load('Tiny Swords/Ground/230.png')
         }
 
         for key in self.tiles:
