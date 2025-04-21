@@ -1,4 +1,4 @@
 import pygame
 import game
-game=game.Game(1000,1000)
+game=game.Game(800,800)
 game.run()

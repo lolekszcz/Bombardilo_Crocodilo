@@ -1,7 +1,7 @@
 import socket
 import threading
 import time
-
+import random
 def get_local_ip():
     # Connect to an external server to find the local IP
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -22,7 +22,7 @@ class Server:
         self.host = host
         self.port = port
         self.number_of_players=0
-
+        self.game_start=False
         self.s = socket.socket()
 
         self.ip = get_local_ip()
@@ -85,8 +85,12 @@ class Server:
                 if d[1] == 'player_disconnected':
                     self.number_of_players -= 1
 
-        if self.ready_players>=self.number_of_players and self.ready_players>=1:
+        if self.ready_players>=self.number_of_players and self.ready_players>=1 and self.game_start==False:
+
+                self.seed=random.randint(1,1000)
+                client_socket.send(f"seed:{self.seed},".encode())
                 client_socket.send("s:game_started,".encode())
+                self.game_start=True
 
         client_socket.send(f"s:number_of_ready_players:{self.ready_players},".encode())
         client_socket.send(f"s:number_of_players:{self.number_of_players},".encode())

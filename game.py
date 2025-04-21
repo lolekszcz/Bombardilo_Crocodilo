@@ -1,9 +1,9 @@
 import pygame
 import time
-
+import map
 from pygame import MOUSEBUTTONDOWN
 from gui import *
-
+import random
 import client
 
 class Game():
@@ -30,7 +30,7 @@ class Game():
 
             if self.client!=None:
                 self.client.run()
-
+                self.handle_message(self.client.buf)
             pos = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type==pygame.KEYDOWN:
@@ -59,6 +59,20 @@ class Game():
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 self.running=False
+    def handle_message(self,data):
+        for d in data:
+            d=d.split(":")
+            if d[0] == "s":
+                if d[1]=="game_started":
+                    self.game_start=True
+                    self.start_the_game()
+            elif d[0]=="seed":
+                self.seed=d[1]
+                print(self.seed)
+
+    def start_the_game(self):
+        random.seed=self.seed
+        self.Map_Generator=map.MapGenerator(self.width,self.height,tile_size=2)
 
     def ready_up(self):
         if self.ready==False:

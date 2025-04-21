@@ -18,6 +18,7 @@ class Client():
         print(self.buf)
         return self.buf
 
+
     def send(self,message):
         self.clientsocket.send(bytes(f'{message},', 'utf-8'))
         time.sleep(0.001)
