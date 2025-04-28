@@ -84,7 +84,7 @@ class MapGenerator:
                         new_map[y][x] = 204  # default sand
 
         self.map = new_map
-
+        print(self.map)
 
         self.tiles = {
             0: pygame.image.load('Tiny Swords/Ground/000.png'),
@@ -135,27 +135,28 @@ class MapGenerator:
 
 
 
-pygame.init()
-screen_width, screen_height = 1000, 1000
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Map Generator")
-
-map_generator = MapGenerator(500, 500, tile_size=2)
-
-running = True
-while running:
-    screen.fill((255, 255, 255))
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-            map_generator = MapGenerator(500, 500, tile_size=2)
-
-    map_generator.draw(screen)
-
-
-
-    pygame.display.flip()
-
-pygame.quit()
+# pygame.init()
+# screen_width, screen_height = 1000, 1000
+# screen = pygame.display.set_mode((screen_width, screen_height))
+# pygame.display.set_caption("Map Generator")
+#
+# map_generator = MapGenerator(500, 500, tile_size=2)
+#
+#
+# running = True
+# while running:
+#     screen.fill((255, 255, 255))
+#
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             running = False
+#         if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+#             map_generator = MapGenerator(500, 500, tile_size=2)
+#
+#     map_generator.draw(screen)
+#
+#
+#
+#     pygame.display.flip()
+#
+# pygame.quit()
