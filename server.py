@@ -21,6 +21,8 @@ class Server:
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.started_players=0
+        self.game_starting=False
         self.number_of_players=0
         self.game_start=False
         self.s = socket.socket()
@@ -85,12 +87,21 @@ class Server:
                 if d[1] == 'player_disconnected':
                     self.number_of_players -= 1
 
-        if self.ready_players>=self.number_of_players and self.ready_players>=1 and self.game_start==False:
-
+        if self.ready_players>=self.number_of_players and self.ready_players>=1 and self.game_start==False and self.game_starting==False:
                 self.seed=random.randint(1,1000)
-                client_socket.send(f"seed:{self.seed},".encode())
-                client_socket.send("s:game_started,".encode())
-                self.game_start=True
+                self.game_starting = True
+                for c in self.clients:
+                    c.send(f"seed:{self.seed},".encode())
+                    c.send("s:game_started,".encode())
+                self.game_start = True
+
+        # if self.game_starting and self.game_start==False:
+        #         client_socket.send(f"seed:{self.seed},".encode())
+        #         self.started_players+=1
+        # if self.started_players==self.number_of_players:
+        #     self.game_start=True
+        #     self.game_starting=False
+        #     client_socket.send("s:game_started,".encode())
 
         client_socket.send(f"s:number_of_ready_players:{self.ready_players},".encode())
         client_socket.send(f"s:number_of_players:{self.number_of_players},".encode())

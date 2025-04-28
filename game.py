@@ -25,6 +25,11 @@ class Game():
     def run(self):
         while self.running:
             self.screen.fill((255,255,255))
+            if self.game_start==True:
+                if type(self.Map_Generator)==map.MapGenerator:
+                    print('aaa')
+                    self.Map_Generator.draw(self.screen)
+
             self.controls()
 
 
@@ -71,8 +76,8 @@ class Game():
                 print(self.seed)
 
     def start_the_game(self):
-        random.seed=self.seed
-        self.Map_Generator=map.MapGenerator(self.width,self.height,tile_size=2)
+
+        self.Map_Generator=map.MapGenerator(self.width,self.height,self.seed,tile_size=2)
 
     def ready_up(self):
         if self.ready==False:

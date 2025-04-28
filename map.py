@@ -4,12 +4,14 @@ import math
 
 
 class MapGenerator:
-    def __init__(self, rows, cols, tile_size=10):
+    def __init__(self, rows, cols,seed,tile_size=10):
         self.rows = rows
         self.cols = cols
         self.tile_size = tile_size
         self.map = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
-
+        self.seed=seed
+        random.seed(seed
+                    )
         core_points = [
             (100, 100),  # top-left
             (self.cols - 100, 100),  # top-right
@@ -23,10 +25,17 @@ class MapGenerator:
         min_y = min(p[1] for p in core_points)
         max_y = max(p[1] for p in core_points)
 
-        additional_points = [
-            (random.randint(min_x, max_x), random.randint(min_y, max_y))
-            for _ in range(16)
-        ]
+        additional_points=[0 for x in range(16)]
+
+        for _ in range(16):
+
+            a=random.randint(min_x, max_x)
+            b=random.randint(min_y, max_y)
+            additional_points[_]=(a,b)
+        # additional_points = [
+        #     (random.randint(min_x, max_x), random.randint(min_y, max_y))
+        #     for _ in range(16)
+        # ]
 
         # Combine all points
         points = core_points + additional_points
