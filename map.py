@@ -52,7 +52,7 @@ class MapGenerator:
                     pass
 
         # Second pass: create thicker sand borders (10 tiles wide)
-        border_thickness = 2
+        border_thickness = 1
         new_map = [row[:] for row in self.map]  # Make a copy so we don’t overwrite while checking
 
         for y in range(border_thickness, self.rows - border_thickness):
@@ -137,13 +137,13 @@ class MapGenerator:
         # for key in self.tiles:
         #     self.tiles[key] = pygame.transform.scale(self.tiles[key], (self.tile_size, self.tile_size))
 
-    def draw(self, screen,zoom,cx,cy):
+    def draw(self, screen,zoom,ox,oy):
         for y in range(self.rows):
             for x in range(self.cols):
                 tile_value = self.map[y][x]
                 image = self.tiles[tile_value]
                 pygame.transform.scale(image,(self.tile_size//2*zoom,self.tile_size//2*zoom))
-                screen.blit(image, (x * self.tile_size//2*zoom, y * self.tile_size//2*zoom))
+                screen.blit(image, (x * self.tile_size//2*zoom+ox, y * self.tile_size//2*zoom+oy))
 
 
 

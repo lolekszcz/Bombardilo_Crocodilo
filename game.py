@@ -12,6 +12,9 @@ class Game():
         self.join()
         self.state = 'start'
         # self.gui = GUI()
+        self.ox=0
+        self.oy=0
+        self.map_speed=10
         self.width=width
         self.height=heigth
         self.screen=pygame.display.set_mode((self.width,self.height))
@@ -22,16 +25,26 @@ class Game():
         self.button = Button('Start_button.png',400,800,100,100)
         clicked = False
         counter = 0
+        self.w=False
+        self.s=False
+        self.ac=False
+        self.dc=False
     def run(self):
         while self.running:
             self.screen.fill((255,255,255))
             if self.game_start==True:
                 if type(self.Map_Generator)==map.MapGenerator:
                     print('aaa')
-                    self.Map_Generator.draw(self.screen,self.d,0,0)
+                    self.Map_Generator.draw(self.screen,self.d,self.ox,self.oy)
 
-
-
+            if self.s:
+                self.oy -= self.map_speed
+            if self.w:
+                self.oy += self.map_speed
+            if self.dc:
+                self.ox -= self.map_speed
+            if self.ac:
+                self.ox += self.map_speed
 
             if self.client!=None:
                 self.client.run()
@@ -44,12 +57,32 @@ class Game():
                     if event.key==pygame.K_r:
                         self.ready_up()
                         print('rr')
+                    if event.key==pygame.K_w:
+                        self.w=True
+                    if event.key==pygame.K_s:
+                        self.s=True
+                    if event.key==pygame.K_a:
+                        self.ac=True
+                    if event.key==pygame.K_d:
+                        self.dc=True
+                if event.type==pygame.KEYUP:
+                    if event.key==pygame.K_w:
+                        self.w=False
+                    if event.key==pygame.K_s:
+                        self.s=False
+                    if event.key==pygame.K_a:
+                        self.ac=False
+                    if event.key==pygame.K_d:
+                        self.dc=False
                 if event.type==pygame.MOUSEWHEEL:
                     if event.y==1:
                         self.d*=self.wheel_speed
                         print('cccc')
                     if event.y==-1:
                         self.d*=1/self.wheel_speed
+
+
+
                 if self.button.collide(pos) and event.type == MOUSEBUTTONDOWN and event.button == 1:
                     self.state = 'game'
 
@@ -61,7 +94,6 @@ class Game():
                 self.gui.draw(self.screen)
 
             pygame.display.update()
-            time.sleep(0.01)
         if self.ready:
             self.ready_up()
         self.client.send('s:player_disconnected')
