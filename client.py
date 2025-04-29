@@ -15,7 +15,7 @@ class Client():
     def receive(self):
         self.buf = self.clientsocket.recv(1024).decode()
         self.buf=self.buf.split(",")
-        print(self.buf)
+        # print(self.buf)
         return self.buf
 
 

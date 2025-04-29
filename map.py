@@ -4,19 +4,22 @@ import math
 
 
 class MapGenerator:
-    def __init__(self, rows, cols,seed,tile_size=10):
+    def __init__(self, rows, cols,seed,d,tile_size=10):
         self.rows = rows
         self.cols = cols
         self.tile_size = tile_size
         self.map = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
         self.seed=seed
+        self.d=d
         random.seed(seed
                     )
+        self.corner=100//d
+        self.dist=80//d
         core_points = [
-            (100, 100),  # top-left
-            (self.cols - 100, 100),  # top-right
-            (100, self.rows - 100),  # bottom-left
-            (self.cols - 100, self.rows - 100)  # bottom-right
+            (self.corner, self.corner),  # top-left
+            (self.cols - self.corner, self.corner),  # top-right
+            (self.corner, self.rows - self.corner),  # bottom-left
+            (self.cols - self.corner, self.rows - self.corner)  # bottom-right
         ]
 
         # 2. Generate additional points between the corners to connect the island
@@ -44,12 +47,12 @@ class MapGenerator:
             for y in range(rows):
                 for x in range(cols):
                     dist = math.sqrt((point[0] - x)**2 + (point[1] - y)**2)
-                    if dist < 80:
+                    if dist < self.dist:
                         self.map[y][x] = 104
                     pass
 
         # Second pass: create thicker sand borders (10 tiles wide)
-        border_thickness = 5
+        border_thickness = 2
         new_map = [row[:] for row in self.map]  # Make a copy so we don’t overwrite while checking
 
         for y in range(border_thickness, self.rows - border_thickness):
@@ -131,15 +134,16 @@ class MapGenerator:
             230: pygame.image.load('Tiny Swords/Ground/230.png')
         }
 
-        for key in self.tiles:
-            self.tiles[key] = pygame.transform.scale(self.tiles[key], (self.tile_size, self.tile_size))
+        # for key in self.tiles:
+        #     self.tiles[key] = pygame.transform.scale(self.tiles[key], (self.tile_size, self.tile_size))
 
-    def draw(self, screen):
+    def draw(self, screen,zoom,cx,cy):
         for y in range(self.rows):
             for x in range(self.cols):
                 tile_value = self.map[y][x]
                 image = self.tiles[tile_value]
-                screen.blit(image, (x * self.tile_size, y * self.tile_size))
+                pygame.transform.scale(image,(self.tile_size//2*zoom,self.tile_size//2*zoom))
+                screen.blit(image, (x * self.tile_size//2*zoom, y * self.tile_size//2*zoom))
 
 
 

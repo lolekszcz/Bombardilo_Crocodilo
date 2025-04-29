@@ -18,7 +18,7 @@ class Game():
         self.running=True
         self.game_start=False
         self.ready=False
-
+        self.wheel_speed=1.5
         self.button = Button('Start_button.png',400,800,100,100)
         clicked = False
         counter = 0
@@ -28,9 +28,9 @@ class Game():
             if self.game_start==True:
                 if type(self.Map_Generator)==map.MapGenerator:
                     print('aaa')
-                    self.Map_Generator.draw(self.screen)
+                    self.Map_Generator.draw(self.screen,self.d,0,0)
 
-            self.controls()
+
 
 
             if self.client!=None:
@@ -38,10 +38,18 @@ class Game():
                 self.handle_message(self.client.buf)
             pos = pygame.mouse.get_pos()
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_r:
                         self.ready_up()
                         print('rr')
+                if event.type==pygame.MOUSEWHEEL:
+                    if event.y==1:
+                        self.d*=self.wheel_speed
+                        print('cccc')
+                    if event.y==-1:
+                        self.d*=1/self.wheel_speed
                 if self.button.collide(pos) and event.type == MOUSEBUTTONDOWN and event.button == 1:
                     self.state = 'game'
 
@@ -60,10 +68,7 @@ class Game():
 
         pygame.quit()
 
-    def controls(self):
-        for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                self.running=False
+
     def handle_message(self,data):
         for d in data:
             d=d.split(":")
@@ -76,8 +81,8 @@ class Game():
                 print(self.seed)
 
     def start_the_game(self):
-
-        self.Map_Generator=map.MapGenerator(self.width,self.height,self.seed,tile_size=2)
+        self.d=8
+        self.Map_Generator=map.MapGenerator(self.width//self.d,self.height//self.d,self.seed,self.d,tile_size=2)
 
     def ready_up(self):
         if self.ready==False:
